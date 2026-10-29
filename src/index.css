@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f6f3ea;
+  --color-paper-2: #efeadd;
+  --color-paper-3: #e6dfcd;
+  --color-ink: #191d1b;
+  --color-graphite: #3b413e;
+  --color-slate: #5f6661;
+  --color-line: #d9d1bf;
+  --color-line-strong: #c4baa4;
+  --color-forest: #1f4d3a;
+  --color-forest-2: #2b6a4f;
+  --color-forest-soft: #e2ebe4;
+  --color-kraft: #b48a5e;
+  --color-kraft-dark: #8a6640;
+  --color-kraft-soft: #efe2cf;
+  --color-fibre: #8b8475;
+  --color-ochre: #9a6b12;
+  --color-ochre-soft: #f6ead0;
+  --color-rust: #9b3d26;
+  --color-rust-soft: #f5e1da;
+  --color-steel: #2f5a7a;
+  --color-steel-soft: #e1eaf1;
+  --color-ai: #5b4a8b;
+  --color-ai-soft: #ebe7f4;
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  ::selection {
+    background: var(--color-forest-soft);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-forest-2);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(59 65 62 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(59 65 62 / 0.07) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .bg-grid-fine {
+    background-image:
+      linear-gradient(to right, rgb(59 65 62 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(59 65 62 / 0.05) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+  .bg-grid-dark {
+    background-image:
+      linear-gradient(to right, rgb(246 243 234 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(246 243 234 / 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  /* Restrained recycled-fibre texture: an SVG turbulence speckle layered at low opacity. */
+  .texture-fibre {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}

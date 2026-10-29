@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npx vitest *)",
+      "Bash(python3 -)",
+      "Bash(sed -i '' \"s/cx\\('relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:py-20', aside \\\\&\\\\&/cx\\('relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:py-20', !!aside \\\\&\\\\&/\" src/components/site/Section.tsx)",
+      "Bash(npm run *)",
+      "Bash(sed -i '' \"s/0 0 0 0.09 0'/0 0 0 0.035 0'/\" src/index.css)",
+      "Bash(sed -i '' 's/bg-fibre opacity-60/bg-fibre/' src/pages/Home.tsx)",
+      "Bash(sed -i '' 's/  \\\\.bg-fibre {/  .texture-fibre {/' src/index.css)",
+      "Bash(sed -i '' 's/absolute inset-0 bg-fibre\"/absolute inset-0 texture-fibre\"/' src/pages/Home.tsx)"
+    ]
+  }
+}
