@@ -11,7 +11,7 @@ import { ProvenanceTag } from '../components/ui/Provenance'
 import { fmtDate } from '../lib/format'
 
 export function SpecificationsPage() {
-  const { specification, updateSpecification } = usePlanner()
+  const { specification, updateSpecification, can } = usePlanner()
   const [draft, setDraft] = useState<ProductionSpecification>(specification)
   const [nameError, setNameError] = useState('')
   const [saved, setSaved] = useState(false)
@@ -81,7 +81,7 @@ export function SpecificationsPage() {
           {saved && <span className="mr-auto text-sm font-medium text-forest" role="status">Specification saved.</span>}
           <Button variant="ghost" icon={<RotateCcw size={14} />} onClick={() => setDraft(structuredClone(DEMO_SPECIFICATION))}>Restore demo values</Button>
           <Button variant="secondary" disabled={!dirty} onClick={() => setDraft(specification)}>Discard changes</Button>
-          <Button icon={<Save size={14} />} disabled={!dirty || hasErrors} onClick={save}>Save specification</Button>
+          <Button icon={<Save size={14} />} disabled={!can('spec') || !dirty || hasErrors} title={can('spec') ? undefined : 'Only the quality manager can change the specification'} onClick={save}>Save specification</Button>
         </div>
       </Card>
     </div>

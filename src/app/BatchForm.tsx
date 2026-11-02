@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function BatchForm({ open, onClose, batch, suggested, onSaved }: Props) {
-  const { batches, addBatch, updateBatch } = usePlanner()
+  const { batches, addBatch, updateBatch, can } = usePlanner()
   const [draft, setDraft] = useState<BatchDraft>(emptyDraft)
   const [errors, setErrors] = useState<BatchDraftErrors>({})
 
@@ -58,7 +58,7 @@ export function BatchForm({ open, onClose, batch, suggested, onSaved }: Props) {
   return (
     <Modal open={open} onClose={onClose} size="xl" title={batch ? `Edit ${batch.id}` : 'Add batch'}
       description="Fields marked * are required. Leave a measurement blank if it has not been measured — it will be flagged, not assumed."
-      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button type="submit" form="batch-form">{batch ? 'Save changes' : 'Add batch'}</Button></>}>
+      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button type="submit" form="batch-form" disabled={!can('batches')}>{batch ? 'Save changes' : 'Add batch'}</Button></>}>
       <form id="batch-form" noValidate onSubmit={submit} className="space-y-6">
         {errorCount > 0 && (
           <div role="alert" className="rounded-md border border-rust/30 bg-rust-soft px-3 py-2 text-sm text-rust">

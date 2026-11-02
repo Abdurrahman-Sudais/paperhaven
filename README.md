@@ -4,7 +4,8 @@
 
 Paperhaven is a recovered-paper assessment and blend-planning platform for recycling businesses and paper mills. This repository contains the marketing website for [paperhaven.top](https://paperhaven.top) and an interactive frontend demonstration of the product.
 
-- Founder: Ifeoma Ezeani
+- Founder/CEO: Ifeoma Ezeani
+- Co-founder/CTO: Yusuf Abdulhamid
 - Contact: [ifeoma@paperhaven.top](mailto:ifeoma@paperhaven.top)
 
 ## Stack
@@ -36,15 +37,26 @@ npm run preview    # serve the production build locally
 | `/solutions` | Industry Solutions |
 | `/pricing` | Pricing (proposed) |
 | `/about` | About |
-| `/contact` | Contact |
+| `/contact` | Early-access form |
+| `/technology`, `/security`, `/privacy`, `/terms` | Proposed AWS architecture; safeguards; review-draft legal pages |
 | `/planner` | Interactive demo: Overview |
 | `/planner/batches` | Incoming Batches |
 | `/planner/blend` | Blend Planner |
 | `/planner/specifications` | Specifications |
 | `/planner/reports` | Reports |
+| `/planner/audit` | Audit & roles |
 | `/planner/settings` | Settings |
 
-This is a client-side routed SPA. Hosting needs to rewrite unknown paths to `index.html`; `public/_redirects` (Netlify) and `vercel.json` (Vercel) are included.
+This is a client-side routed SPA. `public/_redirects` + `public/_headers` (Netlify / Cloudflare Pages) and `vercel.json` (Vercel) set the SPA fallback, security headers and long-lived caching for hashed assets. Every route except the home page is lazy-loaded.
+
+Optional: copy `.env.example` to `.env.local` and set the `VITE_HUBSPOT_*` variables so early-access requests reach HubSpot. Without them the form saves requests in the visitor's browser and offers a pre-filled email.
+
+### Content to confirm before launch
+
+- **Founders:** `FOUNDERS` in `src/config/site.ts`.
+- **Industry statistics** (`PROBLEM_STATS` in `src/pages/Home.tsx`) cite the SWANA National Sword report (via Waste360) and AF&PA's 2023 recycling figures. Check each against its source.
+- **Demo people** (Chidi Okeke, Hannah Fisher, Bola Adebayo, Mark Ellis) are fictional.
+- **Roadmap, pricing, FAQ, privacy notice and terms** are drafts to keep in step with what you offer.
 
 ## Project structure
 
@@ -100,20 +112,23 @@ The specification checker (`specCheck.ts`) only compares values against ranges t
 - Saving, opening, duplicating, deleting and comparing multiple scenarios, persisted in `localStorage`.
 - An editable production specification with range validation.
 - Reports: a scenario comparison table and chart, CSV export, and a print view.
-- A contact form with client-side validation.
+- An early-access form (HubSpot when configured, otherwise local save + mailto) with consent, marketing opt-in and a honeypot.
+- “Demo as” roles with a permission check on every change, and an append-only audit log with CSV export.
+- “Ask about this yard”, a record-grounded assistant on the overview that cites the records it used and refuses quality predictions or guessed measurements.
+- Home page with sourced industry statistics, comparison, roadmap, founders, FAQ, motion (reduced-motion safe).
 
 **Mock or simulated**
 
 - All batches, suppliers, values and documents are fictional and labelled as demonstration data.
 - The **AI assistance** panel is simulated with deterministic rules in `simulatedAi.ts`. No model is called. Its suggestions never write to records: extracted values can only open the edit form for a person to review, and measured values that differ are kept.
 - **Document attachments** record a name and type only. No file is uploaded.
-- The **contact form** does not send anything. It validates, then points users to the email address.
+- The **early-access form** sends nothing unless HubSpot is configured.
 - **Pricing** is proposed and illustrative. There is no checkout.
 - The illustrations are SVG "material plates" rather than photographs. Replace them with licensed photography of real yards and mills in `components/site/MaterialScene.tsx`.
 
 **Would require backend or AI integration**
 
-- Multi-user accounts, authentication, roles and multi-site data (a database and API).
+- Multi-user accounts, authentication, server-enforced roles and multi-site data (a database and API).
 - File storage for inspection reports, weighbridge tickets and photos.
 - Real document extraction and note summarisation through an LLM or OCR service. This should keep the same contract as the simulated version: suggestions only, a human reviews before saving, and nothing is inferred from photographs.
 - Contact form delivery (an email service or CRM).

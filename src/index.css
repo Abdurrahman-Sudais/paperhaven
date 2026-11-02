@@ -81,3 +81,41 @@
     background: white;
   }
 }
+
+/* ───────────── Motion ─────────────
+   Decorative only. With prefers-reduced-motion, content is shown immediately and nothing moves. */
+@keyframes ph-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes ph-pulse-ring { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(2.6); opacity: 0; } }
+@keyframes ph-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes ph-draw { from { stroke-dashoffset: var(--len, 1200); } to { stroke-dashoffset: 0; } }
+@keyframes ph-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes ph-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.06); } }
+@keyframes ph-word-in { from { opacity: 0; transform: translateY(0.4em); filter: blur(4px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes ph-spin-slow { to { transform: rotate(360deg); } }
+@keyframes ph-drift { 0% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(12px, -18px) rotate(8deg); } 100% { transform: translate(0, 0) rotate(0deg); } }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: var(--d, 0ms); }
+.reveal.in { opacity: 1; transform: none; }
+.float { animation: ph-float 6s ease-in-out infinite; }
+.float-slow { animation: ph-float 8s ease-in-out infinite; animation-delay: -3s; }
+.live-dot { position: relative; display: inline-flex; height: 0.5rem; width: 0.5rem; border-radius: 9999px; background: var(--color-forest-2); }
+.live-dot::after { content: ''; position: absolute; inset: 0; border-radius: 9999px; background: inherit; animation: ph-pulse-ring 1.8s cubic-bezier(0, 0, 0.2, 1) infinite; }
+.marquee-track { animation: ph-marquee 42s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.text-shimmer { background: linear-gradient(90deg, var(--color-forest), var(--color-kraft) 45%, var(--color-forest) 60%) 0 0 / 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: ph-shimmer 6s linear infinite; }
+.hero-glow { animation: ph-glow 9s ease-in-out infinite; }
+.word-in { display: inline-block; animation: ph-word-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.spin-slow { animation: ph-spin-slow 24s linear infinite; }
+.drift { animation: ph-drift 14s ease-in-out infinite; }
+.lift { position: relative; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s, box-shadow 0.35s; }
+.lift:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -22px rgb(25 29 27 / 0.35); }
+.spot { position: relative; isolation: isolate; }
+.spot::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; opacity: 0; transition: opacity 0.3s; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(31 77 58 / 0.1), transparent 45%); }
+.spot:hover::before { opacity: 1; }
+.spot:hover { border-color: rgb(31 77 58 / 0.4); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .reveal { opacity: 1; transform: none; }
+  .lift:hover { transform: none; }
+}

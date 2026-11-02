@@ -5,7 +5,7 @@ import { CtaBand, PageHero, Section } from '../components/site/Section'
 import { cx } from '../lib/format'
 import { usePageMeta } from '../lib/usePageMeta'
 
-const PLANS = [
+export const PLANS = [
   {
     name: 'Processor',
     price: '$79',

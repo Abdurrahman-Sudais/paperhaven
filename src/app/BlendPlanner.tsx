@@ -18,7 +18,7 @@ import { ScenarioComparison, SpecSummaryBadge } from './ScenarioComparison'
 import { cx, fmtDate, fmtPct, fmtTonnes, fmtUsd, fmtUsd2, uid } from '../lib/format'
 
 export function BlendPlannerPage() {
-  const { batches, scenarios, specification, working, setWorking, saveScenario, deleteScenario } = usePlanner()
+  const { batches, scenarios, specification, working, setWorking, saveScenario, deleteScenario, can } = usePlanner()
   const [compareIds, setCompareIds] = useState<string[]>([])
   const [compareOpen, setCompareOpen] = useState(false)
   const [nameError, setNameError] = useState('')
@@ -76,8 +76,8 @@ export function BlendPlannerPage() {
             onChange={(e) => update({ targetTonnes: e.target.value === '' ? NaN : Number(e.target.value) })}
             error={calc.issues.some((i) => i.code === 'invalid-target') ? 'Enter a quantity greater than 0.' : undefined} />
           <div className="flex flex-wrap gap-2 md:pt-6">
-            <Button icon={<Save size={14} />} onClick={() => doSave(false)} disabled={!!saved && !dirty}>{saved ? 'Save' : 'Save scenario'}</Button>
-            {saved && <Button variant="secondary" icon={<Copy size={14} />} onClick={() => doSave(true)}>Save as new</Button>}
+            <Button icon={<Save size={14} />} onClick={() => doSave(false)} disabled={!can('scenarios') || (!!saved && !dirty)} title={can('scenarios') ? undefined : 'Your role can explore blends but not save them'}>{saved ? 'Save' : 'Save scenario'}</Button>
+            {saved && <Button variant="secondary" icon={<Copy size={14} />} disabled={!can('scenarios')} onClick={() => doSave(true)}>Save as new</Button>}
             <Button variant="ghost" icon={<FilePlus2 size={14} />} onClick={() => setWorking(newWorkingScenario())}>New</Button>
           </div>
         </div>
@@ -294,7 +294,7 @@ export function BlendPlannerPage() {
                     </p>
                   </div>
                   <Button size="sm" variant="ghost" icon={<FolderOpen size={14} />} onClick={() => setWorking(structuredClone(s))}>Open</Button>
-                  <Button size="sm" variant="ghost" icon={<Trash2 size={14} />} aria-label={`Delete ${s.name}`}
+                  <Button size="sm" variant="ghost" icon={<Trash2 size={14} />} aria-label={`Delete ${s.name}`} disabled={!can('scenarios')}
                     onClick={() => { if (confirm(`Delete scenario “${s.name}”?`)) { deleteScenario(s.id); setCompareIds((ids) => ids.filter((x) => x !== s.id)) } }}>
                     <span className="sr-only sm:not-sr-only">Delete</span>
                   </Button>

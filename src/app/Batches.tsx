@@ -24,7 +24,7 @@ import { fmtDate, fmtPct, fmtTonnes, fmtUsd, fmtUsd2 } from '../lib/format'
 import { suggestBuyerQuestions } from '../lib/simulatedAi'
 
 export function BatchesPage() {
-  const { batches } = usePlanner()
+  const { batches, can } = usePlanner()
   const [filters, setFilters] = useState<BatchFilters>({ search: '', grade: 'all', supplier: 'all', completeness: 'all' })
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'id', dir: 'asc' })
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -64,7 +64,7 @@ export function BatchesPage() {
     <div className="mx-auto max-w-7xl space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-slate">{batches.length} batches in inventory · values are fictional demonstration data</p>
-        <Button icon={<Plus size={16} />} onClick={() => { setEditing(undefined); setFormOpen(true) }}>Add batch</Button>
+        <Button icon={<Plus size={16} />} disabled={!can('batches')} title={can('batches') ? undefined : 'Your role cannot add batches'} onClick={() => { setEditing(undefined); setFormOpen(true) }}>Add batch</Button>
       </div>
 
       <Card>
@@ -132,7 +132,7 @@ const DOC_LABELS: Record<DocumentPlaceholder['kind'], string> = {
 }
 
 function BatchDetail({ batch, onClose, onEdit }: { batch: Batch; onClose: () => void; onEdit: () => void }) {
-  const { addDocument, removeDocument } = usePlanner()
+  const { addDocument, removeDocument, can } = usePlanner()
   const [docName, setDocName] = useState('')
   const [docKind, setDocKind] = useState<DocumentPlaceholder['kind']>('inspection-report')
   const [docError, setDocError] = useState('')
@@ -148,7 +148,7 @@ function BatchDetail({ batch, onClose, onEdit }: { batch: Batch; onClose: () => 
 
   return (
     <Modal open onClose={onClose} variant="panel" title={batch.id} description={`${batch.grade} · ${batch.supplier}`}
-      footer={<><Button variant="secondary" onClick={onClose}>Close</Button><Button icon={<Pencil size={14} />} onClick={onEdit}>Edit batch</Button></>}>
+      footer={<><Button variant="secondary" onClick={onClose}>Close</Button><Button icon={<Pencil size={14} />} disabled={!can('batches')} onClick={onEdit}>Edit batch</Button></>}>
       <div className="space-y-6">
         <div className="flex flex-wrap items-center gap-2">
           <InspectionBadge status={batch.inspectionStatus} />
@@ -217,7 +217,7 @@ function BatchDetail({ batch, onClose, onEdit }: { batch: Batch; onClose: () => 
                   <span className="flex min-w-0 items-center gap-2"><FileText size={14} className="shrink-0 text-slate" /><span className="truncate">{d.name}</span></span>
                   <span className="flex items-center gap-2">
                     <span className="hidden text-xs text-slate sm:inline">{DOC_LABELS[d.kind]} · {fmtDate(d.addedAt)}</span>
-                    <button onClick={() => removeDocument(batch.id, d.id)} className="rounded p-1 text-slate hover:bg-rust-soft hover:text-rust" aria-label={`Remove ${d.name}`}><Trash2 size={13} /></button>
+                    <button disabled={!can('documents')} onClick={() => removeDocument(batch.id, d.id)} className="disabled:cursor-not-allowed disabled:opacity-40 rounded p-1 text-slate hover:bg-rust-soft hover:text-rust" aria-label={`Remove ${d.name}`}><Trash2 size={13} /></button>
                   </span>
                 </li>
               ))}
@@ -230,7 +230,7 @@ function BatchDetail({ batch, onClose, onEdit }: { batch: Batch; onClose: () => 
               <select aria-label="Document type" className={`${inputClass} w-auto`} value={docKind} onChange={(e) => setDocKind(e.target.value as DocumentPlaceholder['kind'])}>
                 {DOC_KINDS.map((k) => <option key={k} value={k}>{DOC_LABELS[k]}</option>)}
               </select>
-              <Button variant="secondary" onClick={attach}>Attach</Button>
+              <Button variant="secondary" disabled={!can('documents')} onClick={attach}>Attach</Button>
             </div>
             {docError && <p role="alert" className="mt-1 text-xs text-rust">{docError}</p>}
           </div>
