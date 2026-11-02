@@ -1,3 +1,4 @@
+import { AssistantPanel } from './AssistantPanel'
 import { Link } from 'react-router-dom'
 import { AlertTriangle, ArrowRight } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
@@ -34,6 +35,8 @@ export function OverviewPage() {
         <Stat label="Stock value" value={fmtUsd(stockValue)} sub={`Avg ${totalTonnes > 0 ? fmtUsd2(stockValue / totalTonnes) : '—'}/t`} tag={<ProvenanceTag kind="calculated" compact />} />
         <Stat label="Missing measurements" value={incomplete.length} sub="Batches lacking moisture or non-paper" tag={<ProvenanceTag kind="calculated" compact />} />
       </div>
+
+      <AssistantPanel />
 
       <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
         <Card>

@@ -1,6 +1,9 @@
 import { Suspense, useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { ArrowLeft, ClipboardList, FileBarChart, Info, LayoutDashboard, Layers, ListChecks, Menu, Settings, Sparkles, X } from 'lucide-react'
+import { ArrowLeft, ClipboardList, FileBarChart, Info, LayoutDashboard, Layers, ListChecks, Lock, Menu, Settings, Sparkles, X } from 'lucide-react'
+import { DEMO_USERS, ROLE_LABEL } from '../lib/access'
+import { usePlanner } from '../state/PlannerContext'
+import { RoleNote } from './RoleNote'
 import { Link } from 'react-router-dom'
 import { LogoMark } from '../components/site/Logo'
 import { Button } from '../components/ui/Button'
@@ -14,6 +17,7 @@ const NAV = [
   { to: '/planner/blend', label: 'Blend Planner', icon: Layers },
   { to: '/planner/specifications', label: 'Specifications', icon: ListChecks },
   { to: '/planner/reports', label: 'Reports', icon: FileBarChart },
+  { to: '/planner/audit', label: 'Audit & roles', icon: Lock },
   { to: '/planner/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -22,6 +26,7 @@ export function AppLayout() {
   const [navOpen, setNavOpen] = useState(false)
   const [aiOpen, setAiOpen] = useState(false)
   const { pathname } = useLocation()
+  const { user, setUser } = usePlanner()
   useEffect(() => setNavOpen(false), [pathname])
 
   const current = NAV.find((n) => (n.end ? pathname === n.to : pathname.startsWith(n.to)))
@@ -57,6 +62,13 @@ export function AppLayout() {
           </ul>
         </nav>
         <div className="border-t border-paper/10 p-4 text-xs text-paper/50">
+          <label htmlFor="demo-as" className="mb-1.5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-paper/50">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-kraft text-[9px] text-ink" aria-hidden>{user.initials}</span>
+            Demo as
+          </label>
+          <select id="demo-as" aria-label="Demo as user" className="mb-4 w-full rounded-md border border-paper/15 bg-ink px-2 py-1.5 text-xs text-paper focus:border-kraft focus:outline-none" value={user.id} onChange={(e) => setUser(e.target.value)}>
+            {DEMO_USERS.map((u) => <option key={u.id} value={u.id}>{u.name} · {ROLE_LABEL[u.role]}</option>)}
+          </select>
           <p className="flex items-center gap-1.5 font-medium text-kraft-soft"><Info size={12} /> Demonstration workspace</p>
           <p className="mt-1">Fictional data, stored in this browser only.</p>
           <Link to="/" className="mt-3 inline-flex items-center gap-1 text-paper/70 hover:text-paper"><ArrowLeft size={12} /> Back to website</Link>
@@ -78,6 +90,7 @@ export function AppLayout() {
           </Button>
         </header>
         <main className="flex-1 bg-grid-fine p-4 sm:p-6">
+          {user.role === 'viewer' && <div className="mb-5"><RoleNote>Viewing as {user.name} ({ROLE_LABEL[user.role].toLowerCase()}): you can explore blends and export reports, but not save changes. Switch user under “Demo as”.</RoleNote></div>}
           <Suspense fallback={<p className="p-6 text-sm text-slate" role="status">Loading…</p>}>
             <Outlet />
           </Suspense>

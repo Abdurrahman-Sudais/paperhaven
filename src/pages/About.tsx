@@ -1,10 +1,11 @@
-import { Mail } from 'lucide-react'
+
 import { CtaBand, PageHero, Section, SectionHeading } from '../components/site/Section'
+import { FoundersGrid, RoadmapSection } from './HomeSections'
 import { MaterialScene } from '../components/site/MaterialScene'
 import { usePageMeta } from '../lib/usePageMeta'
 
 export function AboutPage() {
-  usePageMeta('About', 'Paperhaven was founded by Ifeoma Ezeani to help recycling businesses and paper mills make every recovered-paper batch count.', '/about')
+  usePageMeta('About & team', 'Paperhaven was founded by Ifeoma Ezeani and Yusuf Abdulhamid to help recycling businesses and paper mills make every recovered-paper batch count.', '/about')
   return (
     <>
       <PageHero eyebrow="About" title="Make every recovered-paper batch count." aside={<MaterialScene scene="bales" caption="Recovered fibre, ready for planning" className="aspect-[16/11]" />}>
@@ -16,15 +17,15 @@ export function AboutPage() {
             <p>Recovered paper is a valuable raw material, but information about it often lives in spreadsheets, inboxes and handwritten notes. When a measurement is missing, it is easy for it to be quietly assumed.</p>
             <p className="mt-3">Paperhaven keeps batch records, measurements and calculations together, and is explicit about what is known, what was entered, what was suggested and what was calculated.</p>
           </SectionHeading>
-          <div className="rounded-lg border border-line bg-white/80 p-6">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-forest">Founder</p>
-            <h3 className="mt-2 text-xl font-semibold text-ink">Ifeoma Ezeani</h3>
-            <p className="mt-3 text-slate">Ifeoma founded Paperhaven to bring the precision of industrial planning software to the recovered-paper supply chain.</p>
-            <a href="mailto:ifeoma@paperhaven.top" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-forest hover:underline">
-              <Mail size={14} /> ifeoma@paperhaven.top
-            </a>
-          </div>
+          <blockquote className="reveal self-start rounded-lg border border-line bg-white/80 p-8">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-forest">Our mission</p>
+            <p className="mt-3 text-2xl font-semibold leading-snug text-ink">Make every recovered-paper batch count — by planning from what was measured, not what was assumed.</p>
+          </blockquote>
         </div>
+      </Section>
+      <Section id="team" tone="ink">
+        <SectionHeading inverse eyebrow="Founding team" title="The people behind Paperhaven" />
+        <div className="mt-10"><FoundersGrid /></div>
       </Section>
       <Section tone="paper-2">
         <SectionHeading eyebrow="What we believe" title="Principles" />
@@ -34,13 +35,14 @@ export function AboutPage() {
             ['Show the working', 'Every calculation can be traced to the inputs that produced it.'],
             ['People decide', 'Assistance drafts and highlights. People review and record.'],
           ].map(([t, d]) => (
-            <div key={t} className="border-l-2 border-kraft pl-4">
+            <div key={t} className="reveal border-l-2 border-kraft pl-4">
               <p className="font-semibold text-ink">{t}</p>
               <p className="mt-1 text-sm text-slate">{d}</p>
             </div>
           ))}
         </div>
       </Section>
+      <RoadmapSection />
       <CtaBand />
     </>
   )
